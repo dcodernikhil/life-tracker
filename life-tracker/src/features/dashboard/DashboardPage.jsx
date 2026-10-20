@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/set-state-in-effect */
 /* eslint-disable react-hooks/purity */
+import { testBackendConnection } from "../../services/apiTest";
 
 import { useCallback, useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
@@ -123,6 +124,18 @@ export default function DashboardPage() {
   useEffect(() => {
     loadDashboard();
   }, [loadDashboard, location.key]);
+
+  useEffect(() => {
+  testBackendConnection()
+    .then((result) => console.log("Backend test:", result))
+    .catch((error) => {
+      console.error("Backend test failed:", {
+        status: error.response?.status,
+        data: error.response?.data,
+        message: error.message,
+      });
+    });
+}, []);
 
   // Keep the dashboard in sync with database changes from other components.
   useEffect(() => {
